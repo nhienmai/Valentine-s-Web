@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valentine's Day Poll</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f9f9f9;
+      font-family: 'Courier';
+    }
+
+    #image-container {
+      margin-bottom: 20px;
+      max-width: 100%;
+    }
+
+    #valentine-question {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    #yes-button,
+    #no-button {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    #yes-button,
+    #no-button,
+    #no-button:disabled {
+      font-size: 16px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Courier';
+      transition: font-size 0.3s;
+    }
+
+    #yes-button {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: bold;
+    }
+
+    #no-button {
+      background-color: #e74c3c;
+      color: white;
+      font-weight: bold;
+    }
+
+    #no-button:disabled {
+      background-color: #ccc;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+  <div id="image-container">
+    <img id="main-image" src="https://i.pinimg.com/564x/cb/86/dc/cb86dcec23c2aef1fa0240c2f495a4e0.jpg" alt="Image goes here" style="width: 100%; max-width: 400px;">
+  </div>
+
+  <div id="valentine-question">
+    Will you be my Valentine?
+  </div>
+
+  <div>
+    <button id="yes-button" onclick="handleYesClick()">Yes</button>
+    <button id="no-button" onclick="handleNoClick()">No</button>
+  </div>
+
+  <script>
+    let noCount = 0;
+    let yesPressed = false;
+    let usedImages = [];
+
+    // Array of image filenames in the "images" folder
+    const imageList = [
+      "https://i.pinimg.com/564x/94/83/70/94837059e8e40a9ec7d6ff162806317a.jpg",
+      "https://i.pinimg.com/564x/2a/7a/c6/2a7ac6dbffbdd95ed458eae00e342060.jpg",
+      "https://i.pinimg.com/564x/ac/9c/7c/ac9c7c22d93be9c24e8fadb63bd64b50.jpg",
+      "https://i.pinimg.com/564x/8a/78/93/8a78937e3faabf29b624c57e350f5424.jpg",
+      "https://i.pinimg.com/564x/f8/c9/28/f8c928b634f9e1b5096249ec39294da3.jpg",
+      "https://i.pinimg.com/564x/6d/a0/48/6da0484d770b823d7438d46dd9ad5ce6.jpg",
+      "https://i.pinimg.com/564x/03/16/b3/0316b319ca38869f34f582c85889e70d.jpg",
+      "https://i.pinimg.com/564x/e3/a9/6c/e3a96c9eea5700a23af9e556f7a22fc9.jpg"
+
+      // Add more image filenames as needed
+    ];
+
+    function getRandomImage() {
+      // Check if all images have been used
+      if (usedImages.length === imageList.length) {
+        // Reset usedImages array if all images have been used
+        usedImages = [];
+      }
+
+      // Get a random image that has not been used
+      let randomIndex;
+      do {
+        randomIndex = Math.floor(Math.random() * imageList.length);
+      } while (usedImages.includes(randomIndex));
+
+      // Mark the image as used
+      usedImages.push(randomIndex);
+
+      return `${imageList[randomIndex]}`;
+    }
+
+    function handleYesClick() {
+        if (!yesPressed) {
+        yesPressed = true;
+        updateUI();
+        }
+    }
+
+    function handleNoClick() {
+        if (!yesPressed && noCount < 11) {
+        noCount++;
+        updateUI();
+        }
+    }
+
+
+    function getNoButtonText() {
+      const phrases = [
+        "No",
+        "Are you sure?",
+        "Think again!",
+        "You might regret this!",
+        "Give it another thought!",
+        "Are you absolutely certain?",
+        "This could be a mistake!",
+        "Have a heart!",
+        "Don't be so cold!",
+        "Is that your final answer?",
+        "You're breaking my heart 💔",
+      ];
+
+      return phrases[Math.min(noCount, phrases.length - 1)];
+    }
+
+    function updateUI() {
+      const imageContainer = document.getElementById('image-container');
+      const mainImage = document.getElementById('main-image');
+      const valentineQuestion = document.getElementById('valentine-question');
+      const yesButton = document.getElementById('yes-button');
+      const noButton = document.getElementById('no-button');
+
+      mainImage.src = getImageSource();
+      valentineQuestion.innerText = yesPressed ? "yay ily!!!" : "hey millie, will you be my valentine?";
+      yesButton.style.fontSize = yesPressed ? '20px' : noCount * 20 + 16 + 'px';
+      noButton.innerText = noCount === 0 ? "No" : getNoButtonText();
+      noButton.disabled = noCount >= 11;
+    }
+
+    function getImageSource() {
+      return yesPressed
+        ? "https://i.pinimg.com/564x/4d/60/2b/4d602b29ce6acd31cc6d761efe21ace1.jpg"
+        : getRandomImage(); // Use getRandomImage for "No" button clicks
+    }
+
+    // Initial UI update
+    updateUI();
+  </script>
+</body>
+</html>
